@@ -3,7 +3,7 @@ import { addEmp, viewEmp } from '../controllers/empController.js';
 import verifyToken from '../middleware/validateToken.js';
 const router = express.Router();
 
-router.post('/add', verifyToken, addEmp);
-router.get('/view', verifyToken, viewEmp);
+router.post('/add', addEmp);
+router.get('/view', viewEmp);
 
 export default router;

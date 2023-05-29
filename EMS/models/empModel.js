@@ -52,12 +52,11 @@ const emplyeeSchema = new mongoose.Schema(
 			type: String,
 			validate: {
 				validator: function (v) {
-					if (this.isManager === true) {
-						return v !== null && v !== '';
+					if (this.isManager === false) {
+						return true;
 					}
-					return true;
+					return false;
 				},
-				message: 'Manager field required',
 			},
 		},
 	},

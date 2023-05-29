@@ -2,15 +2,16 @@ import Employee from '../models/empModel.js';
 
 export const addEmp = async (req, res) => {
 	try {
-		const { firstName, middleName = '', lastName, email, role, dob, empCode } = req.body;
+		const { empCode, companyCode, personelDetail, department, role, isManager, manager } = req.body;
+
 		const newEmp = new Employee({
-			firstName,
-			middleName,
-			lastName,
-			email,
-			role,
-			dob,
 			empCode,
+			companyCode,
+			personelDetail,
+			department,
+			role,
+			isManager,
+			manager,
 		});
 
 		await newEmp.save();

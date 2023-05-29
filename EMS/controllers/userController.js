@@ -1,18 +1,48 @@
 import bcrypt from 'bcrypt';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
+import Company from '../models/compModel.js';
 import User from '../models/userModel.js';
 
-export const register = async (req, res) => {
+export const defaultUser = async (req, res) => {
 	try {
-		const { userName, email, password } = req.body;
+		let { userName, password, companyCode, privilage } = req.body;
 		const salt = await bcrypt.genSalt();
 		const hashedPwd = await bcrypt.hash(password, salt);
 
 		const newUser = new User({
 			userName,
-			email,
 			password: hashedPwd,
+			companyCode,
+			privilage,
+		});
+		const savedUser = await newUser.save();
+		delete req.body.userName;
+		delete req.body.password;
+		delete req.body.privilage;
+	} catch (err) {
+		console.log(err.message);
+		process.exit(1);
+	}
+};
+
+export const userRegister = async (req, res) => {
+	try {
+		const { userName, password, companyCode, privilage } = req.body;
+		const salt = await bcrypt.genSalt();
+		const hashedPwd = await bcrypt.hash(password, salt);
+
+		const isUser = await User.findOne({ userName: userName });
+		if (isUser) return res.status(400).json({ msg: 'Username not available' });
+
+		const isComp = await User.findOne({ companyCode: companyCode });
+		if (!isComp) return res.status(400).json({ msg: 'Company doesnt exist' });
+
+		const newUser = new User({
+			userName,
+			password: hashedPwd,
+			companyCode,
+			privilage,
 		});
 		const savedUser = await newUser.save();
 		res.status(201).json(savedUser);
@@ -24,9 +54,9 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
 	try {
-		const { email, password } = req.body;
+		const { userName, password } = req.body;
 
-		const isUser = await User.findOne({ email: email });
+		const isUser = await User.findOne({ userName: userName });
 		if (!isUser) return res.status(400).json({ msg: 'User does not exisit' });
 
 		const isMatch = await bcrypt.compare(password, isUser.password);
@@ -36,7 +66,7 @@ export const login = async (req, res) => {
 
 		delete isUser.password;
 
-		res.status(200).json({ token, isUser });
+		res.status(200).json({ token });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

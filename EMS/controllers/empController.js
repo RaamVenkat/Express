@@ -31,8 +31,8 @@ export const viewEmp = async (req, res) => {
 
 export const viewOneEmp = async (req, res) => {
 	try {
-		const empCode = req.params;
-		const emp = await Employee.findOne(empCode);
+		const { empCode } = req.params;
+		const emp = await Employee.findOne({ empCode: empCode });
 		res.status(200).json(emp);
 	} catch (err) {
 		res.status(404).json({ message: err.message });

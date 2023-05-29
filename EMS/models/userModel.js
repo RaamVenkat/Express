@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
 	{
@@ -7,17 +7,20 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 			min: 2,
 			max: 50,
-		},
-		email: {
-			type: String,
-			required: true,
-			max: 50,
 			unique: true,
 		},
 		password: {
 			type: String,
 			required: true,
 			min: 4,
+		},
+		companyCode: {
+			type: String,
+			required: true,
+		},
+		privilage: {
+			type: Number,
+			required: true,
 		},
 	},
 	{ timestamps: true }

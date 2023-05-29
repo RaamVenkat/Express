@@ -4,6 +4,7 @@ import express from 'express';
 import connectDb from './config/dbConnection.js';
 // import { empData } from './data/emp.js';
 // import Employee from './models/empModel.js';
+import compRoutes from './routes/compRoutes.js';
 import empRoutes from './routes/empRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
@@ -14,6 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/comp', compRoutes);
 app.use('/user', userRoutes);
 app.use('/emp', empRoutes);
 

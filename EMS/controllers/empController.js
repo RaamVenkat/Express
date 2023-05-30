@@ -1,20 +1,31 @@
+import Company from '../models/compModel.js';
 import Employee from '../models/empModel.js';
+import { defaultUser } from './userController.js';
 
 export const addEmp = async (req, res) => {
 	try {
-		const { empCode, companyCode, personelDetail, department, role, isManager, manager } = req.body;
+		const { empCode, companyCode, personnelDetails, department, role, isManager, manager } = req.body;
 
 		const newEmp = new Employee({
 			empCode,
 			companyCode,
-			personelDetail,
+			personnelDetails,
 			department,
 			role,
 			isManager,
 			manager,
 		});
 
-		await newEmp.save();
+		req.body.userName = empCode;
+		req.body.password = empCode;
+		req.body.companyCode = companyCode;
+		req.body.privilage = isManager ? 2 : 1;
+
+		const savedEmp = await newEmp.save();
+		if (savedEmp) {
+			await defaultUser(req);
+			await Company.updateOne({ companyCode: companyCode }, { $inc: { numOfEmp: 1 } });
+		}
 		res.status(201).json(`${empCode} Employee added`);
 	} catch (err) {
 		res.status(409).json({ message: err.message });

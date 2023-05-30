@@ -10,9 +10,8 @@ const emplyeeSchema = new mongoose.Schema(
 		companyCode: {
 			type: String,
 			required: true,
-			unique: true,
 		},
-		personelDetails: {
+		personnelDetails: {
 			firstName: {
 				type: String,
 				required: true,
@@ -51,11 +50,11 @@ const emplyeeSchema = new mongoose.Schema(
 		manager: {
 			type: String,
 			validate: {
-				validator: function (v) {
-					if (this.isManager === false) {
-						return true;
+				validator: function (value) {
+					if (this.isManager === false && !value) {
+						return false;
 					}
-					return false;
+					return true;
 				},
 			},
 		},

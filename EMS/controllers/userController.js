@@ -22,7 +22,6 @@ export const defaultUser = async (req, res) => {
 		delete req.body.privilage;
 	} catch (err) {
 		console.log(err.message);
-		process.exit(1);
 	}
 };
 
